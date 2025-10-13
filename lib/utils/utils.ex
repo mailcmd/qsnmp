@@ -48,11 +48,9 @@ defmodule QSNMP.Utils do
       end
     else
       oid
+        |> String.replace(~r/^\./, "")
         |> String.split(".")
-        |> Enum.map(fn
-          n when n != "" -> String.to_integer(n)
-          n -> -1
-        end)
+        |> Enum.map(&String.to_integer/1)
     end
   end
 
