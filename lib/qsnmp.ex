@@ -32,6 +32,7 @@ defmodule QSNMP do
       :type,
       timeout: @default_timeout,
       max_repetitions: @default_max_repetitions,
+      port: 161,
       version: 1,
       as_tuple: false,
       numeric_return: false
@@ -70,34 +71,45 @@ defmodule QSNMP do
   def get(host, community, oids, timeout, max_repetitions) when is_binary(oids), do:
     get(host, community, String.split(oids, ~r/[ \t,]+/), timeout, max_repetitions)
   def get(host, community, oids, timeout, max_repetitions) do
-    cmd(%Req{
-      host: host,
-      community: community,
-      oids: oids,
-      timeout: timeout,
-      max_repetitions: max_repetitions,
-      type: @get,
-      numeric_return: get_numeric_return(),
-      version: 1
-    })
+    case cmd(%Req{
+        host: host,
+        community: community,
+        oids: oids,
+        timeout: timeout,
+        max_repetitions: max_repetitions,
+        type: @get,
+        numeric_return: get_numeric_return(),
+        version: 1
+      }) do
+
+      {:error, error} -> error
+      result -> result
+    end
   end
+  def get(%Req{} = req), do: cmd(%Req{req | type: @get})
 
   # get2/5
   def get2(host, community, oids, timeout \\ @default_timeout, max_repetitions \\ @default_max_repetitions)
   def get2(host, community, oids, timeout, max_repetitions) when is_binary(oids), do:
     get2(host, community, String.split(oids, ~r/[ \t,]+/), timeout, max_repetitions)
   def get2(host, community, oids, timeout, max_repetitions) do
-    cmd(%Req{
-      host: host,
-      community: community,
-      oids: oids,
-      timeout: timeout,
-      max_repetitions: max_repetitions,
-      type: @get,
-      numeric_return: get_numeric_return(),
-      version: 2
-    })
+    case cmd(%Req{
+        host: host,
+        community: community,
+        oids: oids,
+        timeout: timeout,
+        max_repetitions: max_repetitions,
+        type: @get,
+        numeric_return: get_numeric_return(),
+        version: 2
+      }) do
+
+      {:error, error} -> error
+      result -> result
+    end
   end
+  def get2(%Req{} = req), do: cmd(%Req{req | type: @get, version: 2})
+
 
   ################################################################################################
   ## GETNEXT
@@ -108,34 +120,44 @@ defmodule QSNMP do
   def getnext(host, community, oids, timeout, max_repetitions) when is_binary(oids), do:
     getnext(host, community, String.split(oids, ~r/[ \t,]+/), timeout, max_repetitions)
   def getnext(host, community, oids, timeout, max_repetitions) do
-    cmd(%Req{
-      host: host,
-      community: community,
-      oids: oids,
-      timeout: timeout,
-      max_repetitions: max_repetitions,
-      type: @getnext,
-      numeric_return: get_numeric_return(),
-      version: 1
-    })
+    case cmd(%Req{
+        host: host,
+        community: community,
+        oids: oids,
+        timeout: timeout,
+        max_repetitions: max_repetitions,
+        type: @getnext,
+        numeric_return: get_numeric_return(),
+        version: 1
+      }) do
+
+      {:error, error} -> error
+      result -> result
+    end
   end
+  def getnext(%Req{} = req), do: cmd(%Req{req | type: @getnext})
 
   # getnext2/5
   def getnext2(host, community, oids, timeout \\ @default_timeout, max_repetitions \\ @default_max_repetitions)
   def getnext2(host, community, oids, timeout, max_repetitions) when is_binary(oids), do:
     get2(host, community, String.split(oids, ~r/[ \t,]+/), timeout, max_repetitions)
   def getnext2(host, community, oids, timeout, max_repetitions) do
-    cmd(%Req{
-      host: host,
-      community: community,
-      oids: oids,
-      timeout: timeout,
-      max_repetitions: max_repetitions,
-      type: @getnext,
-      numeric_return: get_numeric_return(),
-      version: 2
-    })
+    case cmd(%Req{
+        host: host,
+        community: community,
+        oids: oids,
+        timeout: timeout,
+        max_repetitions: max_repetitions,
+        type: @getnext,
+        numeric_return: get_numeric_return(),
+        version: 2
+      }) do
+
+      {:error, error} -> error
+      result -> result
+    end
   end
+  def getnext2(%Req{} = req), do: cmd(%Req{req | type: @getnext, version: 2})
 
   ################################################################################################
   ## SET
@@ -146,34 +168,44 @@ defmodule QSNMP do
   def set(host, community, oids, timeout, max_repetitions) when is_binary(oids), do:
     set(host, community, String.split(oids, ~r/[ \t,]+/), timeout, max_repetitions)
   def set(host, community, oids, timeout, max_repetitions) do
-    cmd(%Req{
-      host: host,
-      community: community,
-      oids: oids,
-      timeout: timeout,
-      max_repetitions: max_repetitions,
-      type: @set,
-      numeric_return: get_numeric_return(),
-      version: 1
-    })
+    case cmd(%Req{
+        host: host,
+        community: community,
+        oids: oids,
+        timeout: timeout,
+        max_repetitions: max_repetitions,
+        type: @set,
+        numeric_return: get_numeric_return(),
+        version: 1
+      }) do
+
+      {:error, error} -> error
+      result -> result
+    end
   end
+  def set(%Req{} = req), do: cmd(%Req{req | type: @set})
 
   # set2/5
   def set2(host, community, oids, timeout \\ @default_timeout, max_repetitions \\ @default_max_repetitions)
   def set2(host, community, oids, timeout, max_repetitions) when is_binary(oids), do:
     set2(host, community, String.split(oids, ~r/[ \t,]+/), timeout, max_repetitions)
   def set2(host, community, oids, timeout, max_repetitions) do
-    cmd(%Req{
-      host: host,
-      community: community,
-      oids: oids,
-      timeout: timeout,
-      max_repetitions: max_repetitions,
-      type: @set,
-      numeric_return: get_numeric_return(),
-      version: 2
-    })
+    case cmd(%Req{
+        host: host,
+        community: community,
+        oids: oids,
+        timeout: timeout,
+        max_repetitions: max_repetitions,
+        type: @set,
+        numeric_return: get_numeric_return(),
+        version: 2
+      }) do
+
+      {:error, error} -> error
+      result -> result
+    end
   end
+  def set2(%Req{} = req), do: cmd(%Req{req | type: @set, version: 2})
 
   ################################################################################################
   ## WALK
@@ -218,7 +250,7 @@ defmodule QSNMP do
       oid_final = numeric_return && oid || list_oid_to_string(oid)
       walk_h(%{req|oids: oid}, oid_base, oid_len, numeric_return, count - 1, acc ++ [{oid_final, val}])
     else
-      {:error, :timeout} -> {:error, :timeout}
+      {:error, error} -> error
       _ -> acc
     end
   end
@@ -235,12 +267,26 @@ defmodule QSNMP do
     timeout: timeout,
     max_repetitions: max_repetitions,
     version: version,
+    port: snmp_port,
     type: type,
     numeric_return: numeric_return
   } = req) do
     task = Task.async(fn ->
       [host, port | _] = String.split("#{host}:", ":")
-      port = port == "" && 161 || String.to_integer(port)
+      port =
+        cond do
+          port != "" -> String.to_integer(port)
+          true -> snmp_port
+        end
+
+      version =
+        case version do
+          :v1 -> 1
+          :v2 -> 2
+          :v2c -> 2
+          ver -> ver
+        end
+
       {packet, req_id} = build_request(type, community, oids, version)
       send_request(host, port, packet)
       Logger.log(:debug, "[CMD-TASK] Sending packet and waiting response (#{inspect self()})")
@@ -284,6 +330,11 @@ defmodule QSNMP do
 
   def set_numeric_return(set), do: Process.put(:numeric_return, set)
   def get_numeric_return(), do: Process.get(:numeric_return)
+
+  # for back compatability
+  def settings(:numeric_return, value), do: set_numeric_return(value)
+  def settings(:numeric_return), do: get_numeric_return()
+
 
   ################################################################################################
   # Internal snmp tools

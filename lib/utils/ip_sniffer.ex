@@ -1,5 +1,17 @@
 defmodule IPSniffer do
 
+  if Application.get_env(:qsnmp, :ip_sniffer) do
+    IO.puts """
+    WARNING:
+      You need to add :qsnmp / :ip_sniffer config information to your project. Copy or import
+      configuration from 'deps/qsnmp/config/' to your config directory.
+
+      ********************************************************
+      *** The project will not compile until you make this ***
+      ********************************************************
+    """
+  end
+
   require Logger
 
   # https://github.com/torvalds/linux/blob/v5.18/include/linux/socket.h#L195
