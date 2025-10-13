@@ -1,6 +1,6 @@
 defmodule IPSniffer do
 
-  if Application.complie_env(:qsnmp, :ip_sniffer) do
+  if not Application.complie_env(:qsnmp, :ip_sniffer) do
     IO.puts """
     WARNING:
       You need to add :qsnmp / :ip_sniffer config information to your project. Copy or import
