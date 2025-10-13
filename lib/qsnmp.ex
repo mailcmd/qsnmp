@@ -374,6 +374,7 @@ defmodule QSNMP do
   ## GET / GETNEXT
   def build_varbinds(type, [n | _] = oid) when is_integer(n), do: build_varbinds(type, [oid])
   def build_varbinds(type, [oid | oids]) do
+    IO.inspect oid
     varbind = encode_oid(oid)  <> @fix6nk_20 # <<@type_get_set, byte_size(oid)>> <> oid <> @fix6nk_20
     <<@fix6n16, byte_size(varbind)>> <> varbind <> build_varbinds(type, oids)
   end
