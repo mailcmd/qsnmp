@@ -16,7 +16,7 @@ defmodule IPSniffer do
     # """
 
     raise MissingConfigException,
-      description: """
+      message: """
 
       ERROR:
         You need to add :qsnmp / :ip_sniffer config information to your project. Copy or import
