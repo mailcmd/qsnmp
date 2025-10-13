@@ -2,7 +2,7 @@ defmodule IPSniffer do
 
   if Application.compile_env(:qsnmp, :ip_sniffer, nil) == nil do
     IO.puts """
-    WARNING:
+    ERROR:
       You need to add :qsnmp / :ip_sniffer config information to your project. Copy or import
       configuration from 'deps/qsnmp/config/' to your config directory.
 
@@ -11,6 +11,18 @@ defmodule IPSniffer do
       ********************************************************
 
     """
+    raise MissingApplicationsError,
+      description: """
+      ERROR:
+        You need to add :qsnmp / :ip_sniffer config information to your project. Copy or import
+        configuration from 'deps/qsnmp/config/' to your config directory.
+
+        ********************************************************
+        *** The project will not compile until you make this ***
+        ********************************************************
+
+      """,
+      apps: [{:qsnmp, "~> 0.1.0"}]
   end
 
   require Logger
