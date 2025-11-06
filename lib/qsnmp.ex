@@ -270,7 +270,7 @@ defmodule QSNMP do
     port: snmp_port,
     type: type,
     numeric_return: numeric_return
-  } = req) do
+  } = req) when is_binary(host) and is_binary(community) do
     task = Task.async(fn ->
       [host, port | _] = String.split("#{host}:", ":")
       port =
@@ -323,6 +323,8 @@ defmodule QSNMP do
     end)
     Task.await(task, :infinity)
   end
+
+  def cmd(%Req{}), do: {:error, :unknown}
 
   ################################################################################################
   # Tools
