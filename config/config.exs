@@ -14,4 +14,5 @@ config :qsnmp,
     # dest_ip: <<0,0,0,0>>,
     # dest_port: 161
     # if_name: :all # Interface where process listen
-  ]
+  ],
+  emitter_port: 2161
