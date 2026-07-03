@@ -49,6 +49,7 @@ defmodule QSNMP.Utils do
     else
       oid
         |> String.replace(~r/^\./, "")
+        |> String.replace(~r/\.$/, "")
         |> String.split(".")
         |> Enum.map(&String.to_integer/1)
     end
@@ -69,7 +70,6 @@ defmodule QSNMP.Utils do
   def encode_oid(<<6,8,43,_::binary>> = oid), do: oid
   def encode_oid(oid) when is_binary(oid) do
     oid
-      |> IO.inspect
       |> string_oid_to_list()
       |> encode_oid()
   end
