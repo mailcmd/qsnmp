@@ -65,6 +65,7 @@ defmodule QSNMP.Utils do
     end
   end
 
+  def encode_oid(""), do: def encode_oid([])
   def encode_oid(<<6,8,43,_::binary>> = oid), do: oid
   def encode_oid(oid) when is_binary(oid) do
     oid
