@@ -49,7 +49,7 @@ defmodule QSNMP.Utils do
               {v, _} -> String.to_integer(v)
               _ -> 0
             end
-          end)
+          end) |> IO.inspect
       end
     else
       oid
