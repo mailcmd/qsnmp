@@ -46,10 +46,10 @@ defmodule QSNMP.Utils do
         [{_, noid}] ->         
           noid ++ Enum.map(rest, fn r ->  
             case Integer.parse(r) do
-              {v, _} -> String.to_integer(v)
+              {v, _} -> v
               _ -> 0
             end
-          end) |> IO.inspect
+          end) 
       end
     else
       oid
@@ -58,7 +58,7 @@ defmodule QSNMP.Utils do
         |> String.split(".")
         |> Enum.map(fn r ->  
             case Integer.parse(r) do
-              {v, _} -> String.to_integer(v)
+              {v, _} -> v
               _ -> 0
             end
           end)
