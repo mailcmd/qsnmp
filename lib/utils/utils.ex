@@ -43,15 +43,25 @@ defmodule QSNMP.Utils do
         [] ->
           Logger.log(:error, "[SNMP]: Oid '#{oid}' does not exists!")
           nil
-        [{_, noid}] ->
-          noid ++ Enum.map(rest, &String.to_integer/1)
+        [{_, noid}] ->         
+          noid ++ Enum.map(rest, fn r ->  
+            case Integer.parse(r) do
+              {v, _} -> String.to_integer(v)
+              _ -> 0
+            end
+          end)
       end
     else
       oid
         |> String.replace(~r/^\./, "")
         |> String.replace(~r/\.$/, "")
         |> String.split(".")
-        |> Enum.map(&String.to_integer/1)
+        |> Enum.map(fn r ->  
+            case Integer.parse(r) do
+              {v, _} -> String.to_integer(v)
+              _ -> 0
+            end
+          end)
     end
   end
 
