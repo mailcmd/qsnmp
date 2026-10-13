@@ -32,6 +32,7 @@ defmodule SnmpKit.PDU.Decoder do
   """
   @spec decode_message(binary()) :: {:ok, message()} | {:error, atom()}
   def decode_message(data) when is_binary(data) do
+    # IO.inspect data
     try do
       # Check if this is a SNMPv3 message by looking at version
       case peek_version(data) do
@@ -346,7 +347,7 @@ defmodule SnmpKit.PDU.Decoder do
     end
   end
 
-  defp parse_sequence(<<0x30, rest::binary>>) do
+  def parse_sequence(<<0x30, rest::binary>>) do
     case parse_ber_length_and_remaining(rest) do
       {:ok, {_length, data, remaining}} ->
         {:ok, {data, remaining}}
@@ -356,11 +357,11 @@ defmodule SnmpKit.PDU.Decoder do
     end
   end
 
-  defp parse_sequence(_), do: {:error, :not_sequence}
+  def parse_sequence(_), do: {:error, :not_sequence}
 
-  defp parse_varbind_list(<<>>, acc), do: {:ok, Enum.reverse(acc)}
+  def parse_varbind_list(<<>>, acc), do: {:ok, Enum.reverse(acc)}
 
-  defp parse_varbind_list(data, acc) do
+  def parse_varbind_list(data, acc) do
     case parse_sequence(data) do
       {:ok, {varbind_data, rest}} ->
         case parse_single_varbind(varbind_data) do
@@ -373,7 +374,7 @@ defmodule SnmpKit.PDU.Decoder do
     end
   end
 
-  defp parse_single_varbind(data) do
+  def parse_single_varbind(data) do
     with {:ok, {oid, rest1}} <- parse_oid(data),
          {:ok, {type, value, _rest2}} <- parse_value_with_type(rest1) do
       {:ok, {oid, type, value}}
@@ -424,20 +425,20 @@ defmodule SnmpKit.PDU.Decoder do
 
   defp decode_oid_subid(<<>>, _), do: {:error, :incomplete_oid}
 
-  defp parse_value_with_type(<<@octet_string, length, value::binary-size(length), rest::binary>>) do
+  def parse_value_with_type(<<@octet_string, length, value::binary-size(length), rest::binary>>) do
     {:ok, {:octet_string, value, rest}}
   end
 
-  defp parse_value_with_type(<<@integer, length, value_data::binary-size(length), rest::binary>>) do
+  def parse_value_with_type(<<@integer, length, value_data::binary-size(length), rest::binary>>) do
     int_value = decode_integer_value(value_data)
     {:ok, {:integer, int_value, rest}}
   end
 
-  defp parse_value_with_type(<<@null, 0, rest::binary>>) do
+  def parse_value_with_type(<<@null, 0, rest::binary>>) do
     {:ok, {:null, :null, rest}}
   end
 
-  defp parse_value_with_type(
+  def parse_value_with_type(
          <<@object_identifier, length, oid_data::binary-size(length), rest::binary>>
        ) do
     case decode_oid_data(oid_data) do
@@ -449,43 +450,43 @@ defmodule SnmpKit.PDU.Decoder do
     end
   end
 
-  defp parse_value_with_type(<<@counter32, length, value::binary-size(length), rest::binary>>) do
+  def parse_value_with_type(<<@counter32, length, value::binary-size(length), rest::binary>>) do
     {:ok, {:counter32, decode_unsigned_integer(value), rest}}
   end
 
-  defp parse_value_with_type(<<@gauge32, length, value::binary-size(length), rest::binary>>) do
+  def parse_value_with_type(<<@gauge32, length, value::binary-size(length), rest::binary>>) do
     {:ok, {:gauge32, decode_unsigned_integer(value), rest}}
   end
 
-  defp parse_value_with_type(<<@timeticks, length, value::binary-size(length), rest::binary>>) do
+  def parse_value_with_type(<<@timeticks, length, value::binary-size(length), rest::binary>>) do
     {:ok, {:timeticks, decode_unsigned_integer(value), rest}}
   end
 
-  defp parse_value_with_type(<<@counter64, length, value::binary-size(length), rest::binary>>) do
+  def parse_value_with_type(<<@counter64, length, value::binary-size(length), rest::binary>>) do
     {:ok, {:counter64, decode_counter64(value), rest}}
   end
 
-  defp parse_value_with_type(<<@ip_address, length, value::binary-size(length), rest::binary>>) do
+  def parse_value_with_type(<<@ip_address, length, value::binary-size(length), rest::binary>>) do
     {:ok, {:ip_address, value, rest}}
   end
 
-  defp parse_value_with_type(<<@opaque_type, length, value::binary-size(length), rest::binary>>) do
+  def parse_value_with_type(<<@opaque_type, length, value::binary-size(length), rest::binary>>) do
     {:ok, {:opaque, value, rest}}
   end
 
-  defp parse_value_with_type(<<@no_such_object, 0, rest::binary>>) do
+  def parse_value_with_type(<<@no_such_object, 0, rest::binary>>) do
     {:ok, {:no_such_object, nil, rest}}
   end
 
-  defp parse_value_with_type(<<@no_such_instance, 0, rest::binary>>) do
+  def parse_value_with_type(<<@no_such_instance, 0, rest::binary>>) do
     {:ok, {:no_such_instance, nil, rest}}
   end
 
-  defp parse_value_with_type(<<@end_of_mib_view, 0, rest::binary>>) do
+  def parse_value_with_type(<<@end_of_mib_view, 0, rest::binary>>) do
     {:ok, {:end_of_mib_view, nil, rest}}
   end
 
-  defp parse_value_with_type(_), do: {:error, :invalid_value}
+  def parse_value_with_type(_), do: {:error, :invalid_value}
 
   defp decode_integer_value(<<byte>>) when byte < 128, do: byte
   defp decode_integer_value(<<byte>>) when byte >= 128, do: byte - 256
@@ -522,7 +523,7 @@ defmodule SnmpKit.PDU.Decoder do
 
   defp decode_unsigned_integer(_), do: 0
 
-  defp decode_counter64(data) when byte_size(data) == 8 do
+  defp decode_counter64(data) do #when byte_size(data) == 8 do
     :binary.decode_unsigned(data, :big)
   end
 
